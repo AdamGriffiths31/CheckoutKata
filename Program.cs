@@ -16,7 +16,6 @@ namespace CheckoutKata
         {
             List<CheckoutItem> basket = new List<CheckoutItem>();
             basket = UpdateBasket(basket, 'D', 2);
-            basket = UpdateBasket(basket, 'B', 3);
             DisplayBasket(basket);
             var price= CalculatePrice(basket);
             Console.WriteLine($"Price: £{price}");
@@ -104,6 +103,74 @@ namespace CheckoutKata
             }
             return result;
         }
+        //Tests - would be better inside their own project in the solution with proper test methods
+        public void Test_CanAddToBasket() 
+        {
+            // Test = 1.	Given I have selected to add an item to the basket Then the item should be added to the basket
 
+            //Arrange
+            List<CheckoutItem> basket = new List<CheckoutItem>();
+            //Act
+            basket = UpdateBasket(basket, 'D', 2);
+            //Assert
+            if (basket.Count == 1)
+            {
+                Console.WriteLine("Your basket is not empty -- passed");
+            }
+            else
+            {
+                Console.WriteLine("Your basket is empty -- failed");
+            }
+        }
+        public void Test_BasketPriceCalculated()
+        {
+            // Test = 2.	2.	Given items have been added to the basket Then the total cost of the basket should be calculated
+
+            //Arrange
+            List<CheckoutItem> basket = new List<CheckoutItem>();
+            //Act
+            basket = UpdateBasket(basket, 'A', 1);
+            basket = UpdateBasket(basket, 'D', 2);
+            //Assert
+            DisplayBasket(basket); //Not a proper test result
+        }
+        public void Test_ValidatePriceOfItemB()  //This test in reality may not be suitable as the discount on 'B' may be ended or prices may change ect 
+        {
+            // Test = 3.	3.	Given I have added a multiple of 3 lots of item ‘B’ to the basket Then a promotion of ‘3 for 40’ should be applied to every multiple of 3 
+
+            //Arrange
+            List<CheckoutItem> basket = new List<CheckoutItem>();
+            //Act
+            basket = UpdateBasket(basket, 'B', 9);
+            var price = CalculatePrice(basket);
+            //Assert
+            if (price == 120) // (3*40) = 120 
+            {
+                Console.WriteLine("passed");
+            }
+            else
+            {
+                Console.WriteLine("failed");
+            }
+        }
+        public void Test_ValidatePriceOfItemD()  //This test in reality may not be suitable as the discount on 'D' may be ended or prices may change ect 
+        {
+            // Test = 4.	4.	Given I have added a multiple of 2 lots of item ‘D’ to the basket Then a promotion of ‘25% off’ should be applied to every multiple of 2 
+
+            //Arrange
+            List<CheckoutItem> basket = new List<CheckoutItem>();
+            //Act
+            basket = UpdateBasket(basket, 'D', 5);
+            var price = CalculatePrice(basket);
+            //Assert
+            if (price == 220) // (£82.50 * 2) + 55 == 220 (+55 as its not a pair)
+            {
+                Console.WriteLine("passed");
+            }
+            else
+            {
+                Console.WriteLine("failed");
+            }
+        }
     }
 }
