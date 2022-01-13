@@ -15,8 +15,10 @@ namespace CheckoutKata
         public void CreateBasket()
         {
             List<CheckoutItem> basket = new List<CheckoutItem>();
-            basket = UpdateBasket(basket, 'D', 1);
+            basket = UpdateBasket(basket, 'D', 2);
             DisplayBasket(basket);
+            var price= CalculatePrice(basket);
+            Console.WriteLine($"Price: £{price}");
             Console.ReadLine();
         }
         public void DisplayBasket(List<CheckoutItem> Basket)
@@ -31,7 +33,7 @@ namespace CheckoutKata
             }
             foreach(var item in Basket)
             {
-                Console.WriteLine($"{item.SKU} (£{item.UnitPrice})");
+                Console.WriteLine($"{item.SKU} - {item.Quantity} (£{item.UnitPrice})");
             }
         }
         public List<CheckoutItem> UpdateBasket(List<CheckoutItem> Basket,char SKU,int Quantity)
@@ -44,6 +46,54 @@ namespace CheckoutKata
             }
 
             return Basket;
+        }
+        public double CalculatePrice(List<CheckoutItem> Basket)
+        {
+            if (Basket == null)
+            {
+                return 0;
+            }
+            if (Basket.Count==0)
+            {
+                return 0;
+            }
+            double result = 0;
+
+            //A = no discount
+            //B = 3 for 40  -- foreach batch of 3 its -5 off the total price
+            //C = no dscount
+            //D = 25% off for a pair 
+            foreach(var itemGroup in Basket)
+            {
+                switch (itemGroup.SKU)
+                {
+                    case 'B':
+                        if (itemGroup.Quantity < 3) //No discount can be applied (1-2 range)
+                        {
+                            result += (itemGroup.Quantity * itemGroup.UnitPrice);
+                        }
+                        int batchesOfThree = itemGroup.Quantity / 3;
+                        int remainder = itemGroup.Quantity % 3;
+                        result += (batchesOfThree * 40);
+                        result += (remainder * itemGroup.UnitPrice);
+                        break;
+                    case 'D':
+                        if (itemGroup.Quantity < 2) //No discount can be applied (1 range)
+                        {
+                            result += (itemGroup.Quantity * itemGroup.UnitPrice);
+                        }
+                        int batchesOfTwo = itemGroup.Quantity / 2;
+                        remainder = itemGroup.Quantity % 2;
+                        double discountedPrice = (itemGroup.UnitPrice * 2) * 0.75;
+                        result += (batchesOfTwo * discountedPrice);
+                        result += (remainder * itemGroup.UnitPrice);
+                        break;
+                    default:
+                        result += (itemGroup.Quantity * itemGroup.UnitPrice);
+                        break;
+                }
+            }
+            return result;
         }
 
     }
