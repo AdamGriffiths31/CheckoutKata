@@ -16,6 +16,7 @@ namespace CheckoutKata
         {
             List<CheckoutItem> basket = new List<CheckoutItem>();
             basket = UpdateBasket(basket, 'D', 2);
+            basket = UpdateBasket(basket, 'B', 3);
             DisplayBasket(basket);
             var price= CalculatePrice(basket);
             Console.WriteLine($"Price: £{price}");
@@ -38,13 +39,21 @@ namespace CheckoutKata
         }
         public List<CheckoutItem> UpdateBasket(List<CheckoutItem> Basket,char SKU,int Quantity)
         {
+            //TODO The ability to subtract and remove an item from the basket
+            //TODO List probably isn't the best choice for a proper implementation - invetigate other options e.g. hashmap?
 
+            CheckoutItem item = new CheckoutItem(SKU, Quantity);
             if (Basket.Count == 0)
             {
-                CheckoutItem item = new CheckoutItem(SKU, Quantity);
                 Basket.Add(item);
+                return Basket;
             }
-
+            if (Basket.Any(x => x.SKU == SKU))
+            {
+                Basket.Where(i => i.SKU == SKU).ToList().ForEach(s => s.Quantity = Quantity+s.Quantity);
+                return Basket;
+            }
+            Basket.Add(item);
             return Basket;
         }
         public double CalculatePrice(List<CheckoutItem> Basket)
