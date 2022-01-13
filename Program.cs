@@ -7,6 +7,8 @@ namespace CheckoutKata
 {
     class Program
     {
+        //TODO Add the option for the user to enter their own items
+        //TODO Add the option for the user to see their basket, showing the unit price and the nett price (post discounts)
         static void Main(string[] args)
         {
             Program P = new Program();
@@ -16,9 +18,8 @@ namespace CheckoutKata
         {
             List<CheckoutItem> basket = new List<CheckoutItem>();
             basket = UpdateBasket(basket, 'D', 2);
+            basket = UpdateBasket(basket, 'D', 2);
             DisplayBasket(basket);
-            var price= CalculatePrice(basket);
-            Console.WriteLine($"Price: £{price}");
             Console.ReadLine();
         }
         public void DisplayBasket(List<CheckoutItem> Basket)
@@ -35,6 +36,8 @@ namespace CheckoutKata
             {
                 Console.WriteLine($"{item.SKU} - {item.Quantity} (£{item.UnitPrice})");
             }
+            var price = CalculatePrice(Basket);
+            Console.WriteLine($"Total Price: £{price}");
         }
         public List<CheckoutItem> UpdateBasket(List<CheckoutItem> Basket,char SKU,int Quantity)
         {
